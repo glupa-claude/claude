@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webshop
+  labels:
+    app: webshop
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: webshop
+  template:
+    metadata:
+      labels:
+        app: webshop
+    spec:
+      containers:
+        - name: webshop
+          image: traefik/whoami:v1.10
+          ports:
+            - containerPort: 80
+          env:
+            - name: WHOAMI_NAME
+              value: "webshop v1.0"
+          resources:
+            requests:
+              cpu: 50m
+              memory: 32Mi
+            limits:
+              memory: 128Mi
