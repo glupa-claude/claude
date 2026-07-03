@@ -12,9 +12,17 @@ certificate, and that CA is trusted by the Mac's browser. This is the standard
 way to get valid TLS for internal names.
 
 - CA lives on the Mac: `~/Library/Application Support/mkcert/` (private key stays
-  there — never committed).
+  there — never committed). Trust it once with `mkcert -install`.
 - Leaf cert SANs: `macos-webserver.macos-lab.local`, `macos-webserver`,
-  `10.211.55.8`, `10.211.55.9`, `localhost`. Valid until Oct 2028.
+  `10.211.55.8`, `10.211.55.9`, `localhost`.
+
+> **Apple 398-day limit (important).** Safari and Chrome on macOS reject any TLS
+> server cert whose validity exceeds 398 days, *even if the CA is trusted*
+> ("This Connection Is Not Private" in Safari). `mkcert` issues ~2-year certs,
+> which trip this. So the leaf here is issued with **openssl at 397 days**,
+> signed by the mkcert CA — see the reissue command below. Note `security
+> verify-cert` does NOT flag the over-length cert, but the browser TLS runtime
+> does, so trust that error over the CLI check.
 - In the cluster the cert is a `kubernetes.io/tls` secret `macos-webserver-tls`;
   Traefik serves it for the ingress host. **The key is only in that secret and on
   the Mac — it is not in this repo.**
@@ -37,9 +45,11 @@ kubectl create configmap macos-webserver-site --from-file=index.html \
 kubectl apply -f deployment.yaml
 ```
 
-To reissue the cert (e.g. new SAN): `mkcert -cert-file macos-webserver.crt
--key-file macos-webserver.key macos-webserver.macos-lab.local <names/IPs...>` on
-the Mac, then re-apply the secret.
+To reissue the cert (new SAN, or before it expires) with a browser-legal 397-day
+validity, signed by the mkcert CA — see [`reissue-cert.sh`](reissue-cert.sh),
+then re-apply the `macos-webserver-tls` secret. Do NOT use plain `mkcert <names>`
+here: its default validity exceeds Apple's 398-day limit and browsers will reject
+it (see the box above).
 
 ## Reaching it from the Mac browser
 
