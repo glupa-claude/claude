@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>macos-webserver</title>
+  <style>
+    :root { color-scheme: light dark; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center;
+      font-family: -apple-system, system-ui, sans-serif;
+      background: #0f1115; color: #e7e9ee; }
+    .card { text-align: center; padding: 3rem 3.5rem; border-radius: 16px;
+      background: #171a21; border: 1px solid #262b36; max-width: 32rem; }
+    .lock { font-size: 3rem; }
+    h1 { margin: .5rem 0 .25rem; font-weight: 600; letter-spacing: -.02em; }
+    .host { font-family: ui-monospace, monospace; color: #7ee2b8; }
+    p { color: #9aa3b2; line-height: 1.6; }
+    .badge { display: inline-block; margin-top: 1rem; padding: .3rem .8rem;
+      border-radius: 999px; background: #10331f; color: #7ee2b8;
+      font-size: .85rem; border: 1px solid #1c5334; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="lock">🔒</div>
+    <h1>macos-webserver</h1>
+    <p>Served as a container from the k3s cluster<br>
+       on <span class="host">macos-webserver.macos-lab.local</span></p>
+    <span class="badge">HTTPS · trusted certificate</span>
+  </div>
+</body>
+</html>
