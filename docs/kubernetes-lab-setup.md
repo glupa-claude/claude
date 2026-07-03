@@ -105,6 +105,15 @@ kubectl get pods -A            # coredns, traefik, metrics-server... all Running
 kubectl label node k8s-worker1 node-role.kubernetes.io/worker=worker
 ```
 
+## Rebuilding on another host (e.g. the Windows workstation)
+
+Sections 1.4 through 3 are fully automated by [`scripts/k8s_lab_bootstrap.py`](../scripts/k8s_lab_bootstrap.py):
+create two Ubuntu Server VMs in whatever hypervisor the host has (tick "Install OpenSSH
+server"), copy `~/.ssh/id_ed25519_vm` + `.pub` over from the Mac (the private key is
+deliberately not in this repo), edit the CONFIG block (IPs, key path), then
+`pip install paramiko && python k8s_lab_bootstrap.py`. If the key isn't installed on the
+VMs yet it asks for the password once and installs it. Idempotent — safe to re-run.
+
 ## Adding more workers
 
 Repeat section 2 with a new name (`k8s-worker2`, new MAC) — cloning from the powered-off
